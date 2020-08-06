@@ -1,0 +1,3 @@
+#1) Extract reviews of any product from ecommerce website like snapdeal and amazon
+#2) Perform sentimental analysis
+
