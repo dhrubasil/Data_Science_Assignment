@@ -1,23 +1,29 @@
 #Perform Clustering for the crime data and identify the number of clusters formed and draw inferences.
 
-crime_data <- read.csv(file.choose())
-View(crime_data)
+crimedata<-read.csv(file.choose()) #uploading the dataset
+View(crimedata)
+attach(crimedata)
 
-library(tidyverse)  # data manipulation
-library(cluster)    # clustering algorithms
-library(factoextra) # clustering visualization
-library(dendextend) # for comparing two dendrograms
+str(crimedata) #trying to know the structure of the data set
+mydata<-crimedata[,2:5] #including only integer values and excluding first coloumn
+View(mydata)
+norm_data<-scale(mydata) #normalising the data
+dist_data<-dist(norm_data,method = "euclidean") #trying to find the distance between data points
+dist_data
+plot(dist_data) #ploting the distances
 
-df <- crime_data
-df <- na.omit(df)
-df <- scale(df)
-head(df)
+fit<-hclust(dist_data, method = "complete") #creating my model with hclust
+fit$labels
+plot(fit)  #ploted a dentogram
+groups<-cutree(fit,k=5) #using cutree function to segregate
+class(groups)
+membership<-as.matrix(groups)
+table(membership) #Assigning membership
+final<-cbind(crimedata,membership) #final model
+View(final)
 
-# Dissimilarity matrix
-d <- dist(df, method = "euclidean")
-
-# Hierarchical clustering using Complete Linkage
-hc1 <- hclust(d, method = "complete" )
-
-# Plot the obtained dendrogram
-plot(hc1, cex = 0.6, hang = -1)
+kcs<-kmeans(norm_data,5)#k means clustering model
+str(kcs)
+table(kcs$cluster)
+final1<-cbind(crimedata,kcs$cluster)
+View(final1) #final model in k means clustering 
