@@ -1,20 +1,30 @@
 #Emp_data -> Build a prediction model for Churn_out_rate
 
-Emp_data <- read.csv(file.choose())
+emp_data<-read.csv(file.choose())
+View(emp_data)
+attach(emp_data)
+plot(emp_data$Churn_out_rate,emp_data$Salary_hike)
+cor(Salary_hike,Churn_out_rate)
 
-summary(Emp_data)
+reg_lm<-lm(emp_data$Churn_out_rate~emp_data$Salary_hike)
+summary(reg_lm)
+reg_lm$fitted.values
+confint(reg_lm, interval=0.95)
+predict(reg_lm,level="predict")
 
-# Variance and Standard deviation of Salary_hike column
-var(Emp_data$Salary_hike)
+reg_log<-lm(Churn_out_rate~log(Salary_hike))
+summary(reg_log)            
+reg_log$fitted.values
+confint(reg_log,interval=0.95)
+predict(reg_log,level = "predict")
+plot(log(Salary_hike),Churn_out_rate)
+cor(log(Salary_hike),Churn_out_rate)
 
-sd(Emp_data$Salary_hike)
-
-# Variance and Standard deviation of Churn_out_rate column
-var(Emp_data$Churn_out_rate)
-
-sd(Emp_data$Churn_out_rate)
-
-Churn_out_rate_Model <- lm(Churn_out_rate ~ Salary_hike, data = Emp_data)
-summary(Churn_out_rate_Model)
-
-plot(Churn_out_rate_Model)
+reg_exp<-lm(log(Churn_out_rate)~Salary_hike)
+summary(reg_exp)
+cor(reg_exp)
+reg_exp$fitted.values
+confint(reg_exp,interval=0.95)
+predict(reg_exp,level = "predict")
+cor(log(Churn_out_rate),Salary_hike)
+plot(log(Churn_out_rate),Salary_hike)
