@@ -1,5 +1,3 @@
-#Implement a KNN model to classify the animals in to categories
-
 library(readr)
 animals<-read.csv(file.choose()) #importing the dataset
 View(animals)

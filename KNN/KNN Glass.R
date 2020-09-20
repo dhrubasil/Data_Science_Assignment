@@ -1,52 +1,58 @@
-#Prepare a model for glass classification using KNN
-
 library(readr)
-glass <- read.csv(file.choose())
-class(glass)
+glass<-read.csv(file.choose())
 View(glass)
-table(glass$Type)
-round(prop.table(table(glass$Type))*100,1)
+structure(glass)
+dim(glass)
+str(glass)
 summary(glass)
-glass1=sample(2,nrow(glass),replace=T,prob=c(0.8,0.2))
-
-glass1_train=glass[glass1==1,]
-glass1_test=glass[glass1==2,]
-
-normalized_data=function(x){
-  return((x-min(x))/(max(x)-min(x)))
-}
-glass_norm_train=as.data.frame(lapply(glass1_train[,-10],normalized_data))
-glass_norm_test=as.data.frame(lapply(glass1_test[,-10],normalized_data))
-
-
-glass1_train_lable=glass1_train[,10]
-
-glass1_test_lable=glass1_test[,10]
+normalise_data<-function(x){return((x-min(x))/(max(x)-min(x)))}
+glassnorm<-as.data.frame(lapply(glass[1:9],normalise_data))
+View(glassnorm)
+glass_train<-glassnorm[1:160,]
+View(glass_train)
+class(glass_train)
+glass_test<-glassnorm[161:214,]
+class(glass_test)
+glas_train_labels<-glass[1:160,10]
+View(glas_train_labels)
+glass_test_labels<-glass[161:214,10]
 library(class)
+model_pred<-knn(glass_train,glass_test,cl=glas_train_labels,k=11)
+
 library(caret)
+confusion<-(table(model_pred, glass_test_labels))
+confusion
 
-glass_pred=knn(train=glass_norm_train, test=glass_norm_test,cl=glass1_train_lable,k=1)
+accuracy<- sum(diag(confusion))/sum(confusion)
+accuracy
 
-library(gmodels)
-# Create cross table of predicted and actual
-CrossTable( x =  glass1_test_lable, y = glass_pred,prop.chisq=FALSE)
-mean(glass_pred==glass1_test_lable)
+#trying KNN for different K values
 
-glass_pred=knn(train=glass_norm_train, test=glass_norm_test,cl=glass1_train_lable,k=3)
+model_pred<-knn(glass_train,glass_test,cl=glas_train_labels,k=21)
+confusion<-(table(model_pred, glass_test_labels))
+confusion
 
-# Create cross table of predicted and actual
-CrossTable( x =  glass1_test_lable, y = glass_pred,prop.chisq=FALSE)
-mean(glass_pred==glass1_test_lable)
-confusionMatrix(glass_pred)
+accuracy<- sum(diag(confusion))/sum(confusion)
+accuracy
 
-glass_pred=knn(train=glass_norm_train, test=glass_norm_test,cl=glass1_train_lable,k=5)
+model_pred<-knn(glass_train,glass_test,cl=glas_train_labels,k=14)
+confusion<-(table(model_pred, glass_test_labels))
+confusion
 
-# Create cross table of predicted and actual
-CrossTable( x =  glass1_test_lable, y = glass_pred,prop.chisq=FALSE)
-mean(glass_pred==glass1_test_lable)
+accuracy<- sum(diag(confusion))/sum(confusion)
+accuracy
 
-glass_pred=knn(train=glass_norm_train, test=glass_norm_test,cl=glass1_train_lable,k=7)
+model_pred<-knn(glass_train,glass_test,cl=glas_train_labels,k=9)
+confusion<-(table(model_pred, glass_test_labels))
+confusion
 
-# Create cross table of predicted and actual
-CrossTable( x =  glass1_test_lable, y = glass_pred,prop.chisq=FALSE)
-mean(glass_pred==glass1_test_lable)
+accuracy<- sum(diag(confusion))/sum(confusion)
+accuracy
+
+
+model_pred<-knn(glass_train,glass_test,cl=glas_train_labels,k=3)
+confusion<-(table(model_pred, glass_test_labels))
+confusion
+
+accuracy<- sum(diag(confusion))/sum(confusion)
+accuracy
